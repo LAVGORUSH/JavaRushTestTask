@@ -29,7 +29,7 @@ public class Ship extends AbstractBaseEntity {
     private Boolean isUsed;
 
     @Column(name = "speed")
-    private Double sped;
+    private Double speed;
 
     @Column(name = "crewSize")
     private Integer crewSize;
@@ -77,12 +77,12 @@ public class Ship extends AbstractBaseEntity {
         isUsed = used;
     }
 
-    public Double getSped() {
-        return sped;
+    public Double getSpeed() {
+        return speed;
     }
 
-    public void setSped(Double sped) {
-        this.sped = sped;
+    public void setSpeed(Double sped) {
+        this.speed = sped;
     }
 
     public Integer getCrewSize() {
@@ -113,7 +113,7 @@ public class Ship extends AbstractBaseEntity {
                 ", shipType=" + shipType +
                 ", prodDate=" + prodDate +
                 ", isUsed=" + isUsed +
-                ", sped=" + sped +
+                ", sped=" + speed +
                 ", crewSize=" + crewSize +
                 ", rating=" + rating +
                 '}';
