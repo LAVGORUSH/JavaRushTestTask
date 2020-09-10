@@ -12,9 +12,9 @@ public interface ShipService {
 
     Ship create(Ship ship);
 
-    void update(Ship ship, Long id);
+    Ship update(Ship ship, Long id);
 
-    void delete(Ship ship);
+    void delete(Long id);
 
     Ship get(Long id);
 

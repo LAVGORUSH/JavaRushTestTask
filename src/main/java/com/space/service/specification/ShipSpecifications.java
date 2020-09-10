@@ -1,6 +1,7 @@
-package com.space.utils;
+package com.space.service.specification;
 
 import com.space.model.Ship;
+import com.space.utils.DateUtil;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ShipSpecifications {

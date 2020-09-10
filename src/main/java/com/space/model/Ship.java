@@ -7,8 +7,7 @@ import java.util.Date;
  * Domain object what represent ship.
  */
 @Entity
-@Table(name = "ship", schema = "cosmoport")
-@Access(AccessType.FIELD)
+@Table(name = "ship")
 public class Ship extends AbstractBaseEntity {
 
     @Column(name = "name", length = 50)
@@ -36,6 +35,18 @@ public class Ship extends AbstractBaseEntity {
 
     @Column(name = "rating")
     private Double rating;
+
+    public Ship(Long id, String name, String planet, ShipType shipType, Date prodDate, Boolean isUsed, Double speed, Integer crewSize, Double rating) {
+        super(id);
+        this.name = name;
+        this.planet = planet;
+        this.shipType = shipType;
+        this.prodDate = prodDate;
+        this.isUsed = isUsed;
+        this.speed = speed;
+        this.crewSize = crewSize;
+        this.rating = rating;
+    }
 
     public String getName() {
         return name;
@@ -113,7 +124,7 @@ public class Ship extends AbstractBaseEntity {
                 ", shipType=" + shipType +
                 ", prodDate=" + prodDate +
                 ", isUsed=" + isUsed +
-                ", sped=" + speed +
+                ", speed=" + speed +
                 ", crewSize=" + crewSize +
                 ", rating=" + rating +
                 '}';

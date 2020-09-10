@@ -8,12 +8,20 @@ import javax.persistence.*;
  * Base class which property id.
  */
 @MappedSuperclass
+@Access(AccessType.FIELD)
 public abstract class AbstractBaseEntity implements Persistable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     protected Long id;
+
+    protected AbstractBaseEntity() {
+    }
+
+    protected AbstractBaseEntity(Long id) {
+        this.id = id;
+    }
 
     public void setId(Long id) {
         this.id = id;

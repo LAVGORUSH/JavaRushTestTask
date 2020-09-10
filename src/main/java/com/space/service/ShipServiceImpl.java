@@ -4,6 +4,7 @@ import com.space.model.Ship;
 import com.space.repository.ShipRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,6 +19,7 @@ public class ShipServiceImpl implements ShipService {
     private final ShipRepository repository;
     private final Logger log = LoggerFactory.getLogger(ShipServiceImpl.class);
 
+    @Autowired
     public ShipServiceImpl(ShipRepository repository) {
         this.repository = repository;
     }
@@ -38,17 +40,16 @@ public class ShipServiceImpl implements ShipService {
     }
 
     @Override
-    public void update(Ship ship, Long id) {
+    public Ship update(Ship ship, Long id) {
         log.info("update ship with id=" + id);
-        ship.setId(id);
         ship.setRating(calculateRating(ship));
-        repository.save(ship);
+        return repository.save(ship);
     }
 
     @Override
-    public void delete(Ship ship) {
-        log.info("delete ship" + ship);
-        repository.delete(ship);
+    public void delete(Long id) {
+        log.info("delete ship with id=" + id);
+        repository.deleteById(id);
     }
 
     @Override
