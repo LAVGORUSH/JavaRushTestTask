@@ -3,8 +3,10 @@ package com.space.controller;
 import com.space.model.Ship;
 import com.space.model.ShipType;
 import com.space.service.ShipService;
+import com.space.service.specification.ShipSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +18,10 @@ import static com.space.utils.ShipUtil.transformDataForUpdate;
 import static com.space.utils.ValidationUtil.*;
 
 @RestController
-@RequestMapping(value = "/rest/ships/", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = ShipController.REST_SHIPS_URL, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ShipController {
 
+    public static final String REST_SHIPS_URL = "/rest/ships";
     private final ShipService service;
 
     @Autowired
@@ -27,31 +30,28 @@ public class ShipController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Ship>> getAllShip(@RequestParam String name, @RequestParam String planet,
-                                                 @RequestParam ShipType shipType,
-                                                 @RequestParam Long after, @RequestParam Long before,
-                                                 @RequestParam Double minSpeed, @RequestParam Double maxSpeed,
-                                                 @RequestParam Integer minCrewSize, @RequestParam Integer maxCrewSize,
-                                                 @RequestParam Double minRating, @RequestParam Double maxRating,
-                                                 @RequestParam ShipOrder order,
-                                                 @RequestParam(defaultValue = "0") String pageNumber, @RequestParam(defaultValue = "3") String pageSize) {
-        List<Ship> allFiltered = service.getAll(PageRequest.of(Integer.parseInt(pageNumber), Integer.parseInt(pageSize)));
-
-        if (allFiltered.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(allFiltered, HttpStatus.OK);
+    public List<Ship> getAllShip(@RequestParam(required = false) String name, @RequestParam(required = false) String planet,
+                                 @RequestParam(required = false) ShipType shipType, @RequestParam(required = false) Boolean isUsed,
+                                 @RequestParam(required = false) Long after, @RequestParam(required = false) Long before,
+                                 @RequestParam(required = false) Double minSpeed, @RequestParam(required = false) Double maxSpeed,
+                                 @RequestParam(required = false) Integer minCrewSize, @RequestParam(required = false) Integer maxCrewSize,
+                                 @RequestParam(required = false) Double minRating, @RequestParam(required = false) Double maxRating,
+                                 @RequestParam(defaultValue = "ID") ShipOrder order,
+                                 @RequestParam(defaultValue = "0") Integer pageNumber, @RequestParam(defaultValue = "3") Integer pageSize) {
+        return service.getAllFiltered(ShipSpecifications.combineSpecification(name, planet, shipType, isUsed,
+                after, before, minSpeed, maxSpeed, minCrewSize, maxCrewSize, minRating, maxRating),
+                PageRequest.of(pageNumber, pageSize, new Sort(Sort.Direction.ASC, order.getFieldName())));
     }
 
-    @GetMapping("count")
-    public ResponseEntity<Long> getCountFiltered(@RequestParam String name, @RequestParam String planet,
-                                                 @RequestParam ShipType shipType,
-                                                 @RequestParam Long after, @RequestParam Long before,
-                                                 @RequestParam Double minSpeed, @RequestParam Double maxSpeed,
-                                                 @RequestParam Integer minCrewSize, @RequestParam Integer maxCrewSize,
-                                                 @RequestParam Double minRating, @RequestParam Double maxRating) {
-        Long countFiltered = service.getCountFiltered(null);
-        return new ResponseEntity<>(countFiltered, HttpStatus.OK);
+    @GetMapping("/count")
+    public Long getCountFiltered(@RequestParam(required = false) String name, @RequestParam(required = false) String planet,
+                                 @RequestParam(required = false) ShipType shipType, @RequestParam(required = false) Boolean isUsed,
+                                 @RequestParam(required = false) Long after, @RequestParam(required = false) Long before,
+                                 @RequestParam(required = false) Double minSpeed, @RequestParam(required = false) Double maxSpeed,
+                                 @RequestParam(required = false) Integer minCrewSize, @RequestParam(required = false) Integer maxCrewSize,
+                                 @RequestParam(required = false) Double minRating, @RequestParam(required = false) Double maxRating) {
+        return service.getCountFiltered(ShipSpecifications.combineSpecification(name, planet, shipType, isUsed,
+                after, before, minSpeed, maxSpeed, minCrewSize, maxCrewSize, minRating, maxRating));
     }
 
     @PostMapping
@@ -63,7 +63,7 @@ public class ShipController {
         return new ResponseEntity<>(created, HttpStatus.OK);
     }
 
-    @GetMapping(value = "{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Ship> getShip(@PathVariable Long id) {
         if (!validateId(id)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -75,7 +75,7 @@ public class ShipController {
         return new ResponseEntity<>(ship, HttpStatus.OK);
     }
 
-    @PostMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Ship> updateShip(@RequestBody Ship ship, @PathVariable Long id) {
         if (ship == null || !validateId(id)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -94,7 +94,7 @@ public class ShipController {
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Ship> deleteShip(@PathVariable Long id) {
         if (!validateId(id)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

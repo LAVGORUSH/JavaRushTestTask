@@ -32,4 +32,8 @@ public class ValidationUtil {
                 && ship.getSpeed() == null
                 && ship.getCrewSize() == null;
     }
+
+    public static <T> T checkNullAndReturnDefault(T param, T defaultParam) {
+        return param == null ? defaultParam : param;
+    }
 }

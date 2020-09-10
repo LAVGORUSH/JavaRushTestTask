@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.space.utils.ShipUtil.calculateRating;
@@ -27,8 +28,13 @@ public class ShipServiceImpl implements ShipService {
     @Override
     public List<Ship> getAll(Pageable pageable) {
         log.info("get all ships");
-        Page<Ship> all = repository.findAll(pageable);
-        return all.getContent();
+        Page<Ship> result = repository.findAll(pageable);
+        return result.hasContent() ? result.getContent() : Collections.emptyList();
+    }
+
+    @Override
+    public List<Ship> getAll() {
+        return repository.findAll();
     }
 
     @Override
@@ -68,5 +74,10 @@ public class ShipServiceImpl implements ShipService {
     public Long getCountFiltered(Specification<Ship> filter) {
         log.info("get count filtered");
         return repository.count(filter);
+    }
+
+    @Override
+    public Long getCount() {
+        return repository.count();
     }
 }

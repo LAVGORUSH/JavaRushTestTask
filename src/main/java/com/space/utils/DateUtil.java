@@ -1,12 +1,13 @@
 package com.space.utils;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class DateUtil {
+
     private DateUtil() {
     }
 
     public static Date parse(Long dateInSeconds) {
-        return new Date(dateInSeconds * 1000);
+        return dateInSeconds == null ? null : new Date(dateInSeconds);
     }
 }
