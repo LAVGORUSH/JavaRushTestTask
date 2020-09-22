@@ -8,10 +8,6 @@ import java.util.List;
 
 public interface ShipService {
 
-    List<Ship> getAll(Pageable pageable);
-
-    List<Ship> getAll();
-
     Ship create(Ship ship);
 
     Ship update(Ship ship, Long id);
@@ -23,6 +19,4 @@ public interface ShipService {
     List<Ship> getAllFiltered(Specification<Ship> filter, Pageable pageable);
 
     Long getCountFiltered(Specification<Ship> filter);
-
-    Long getCount();
 }

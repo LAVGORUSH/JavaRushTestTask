@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.space.utils.ShipUtil.calculateRating;
+import static com.space.utils.ShipUtil.roundDouble;
 
 @Service
 public class ShipServiceImpl implements ShipService {
@@ -26,21 +27,10 @@ public class ShipServiceImpl implements ShipService {
     }
 
     @Override
-    public List<Ship> getAll(Pageable pageable) {
-        log.info("get all ships");
-        Page<Ship> result = repository.findAll(pageable);
-        return result.hasContent() ? result.getContent() : Collections.emptyList();
-    }
-
-    @Override
-    public List<Ship> getAll() {
-        return repository.findAll();
-    }
-
-    @Override
     public Ship create(Ship ship) {
         log.info("create new ship");
         ship.setUsed(ship.getUsed() != null && ship.getUsed());
+        ship.setSpeed(roundDouble(ship.getSpeed()));
         ship.setRating(calculateRating(ship));
         return repository.save(ship);
     }
@@ -48,6 +38,7 @@ public class ShipServiceImpl implements ShipService {
     @Override
     public Ship update(Ship ship, Long id) {
         log.info("update ship with id=" + id);
+        ship.setSpeed(roundDouble(ship.getSpeed()));
         ship.setRating(calculateRating(ship));
         return repository.save(ship);
     }
@@ -74,10 +65,5 @@ public class ShipServiceImpl implements ShipService {
     public Long getCountFiltered(Specification<Ship> filter) {
         log.info("get count filtered");
         return repository.count(filter);
-    }
-
-    @Override
-    public Long getCount() {
-        return repository.count();
     }
 }

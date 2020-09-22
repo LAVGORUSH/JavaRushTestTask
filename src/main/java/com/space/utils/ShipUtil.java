@@ -16,7 +16,11 @@ public class ShipUtil {
         Double k = ship.getUsed() ? 0.5 : 1;
         Integer y0 = 3019 - 1900;
         Integer y1 = ship.getProdDate().getYear();
-        return new BigDecimal(80 * v * k / (y0 - y1 + 1)).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        return roundDouble(80 * v * k / (y0 - y1 + 1));
+    }
+
+    public static Double roundDouble(Double number) {
+        return new BigDecimal(number).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     public static Ship transformDataForUpdate(Ship found, Ship ship) {

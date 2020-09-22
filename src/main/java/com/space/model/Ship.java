@@ -27,13 +27,13 @@ public class Ship extends AbstractBaseEntity {
     @Column(name = "isUsed")
     private Boolean isUsed;
 
-    @Column(name = "speed")
+    @Column(name = "speed", precision = 3, scale = 2)
     private Double speed;
 
     @Column(name = "crewSize")
     private Integer crewSize;
 
-    @Column(name = "rating")
+    @Column(name = "rating", precision = 5, scale = 2)
     private Double rating;
 
     public Ship(Long id, String name, String planet, ShipType shipType, Date prodDate, Boolean isUsed, Double speed, Integer crewSize, Double rating) {
